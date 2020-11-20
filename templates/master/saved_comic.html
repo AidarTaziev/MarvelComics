@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Сохраненный комикс {{ saved_comic.title }}
+{% endblock %}
+
+{% block content %}
+    <h1>Сохраненный комикс: {{ saved_comic.title }}</h1>
+
+    {% if saved_comic.description %}
+        <p>{{ saved_comic.description }}</p>
+    {% endif %}
+
+    <p>Дата выхода {{ saved_comic.release_date }}</p>
+
+    {% if saved_comic.images %}
+        <h2>Картинки в выпуске</h2>
+        <ul>
+            {% for image in saved_comic.images %}
+                <a href="{{ image.path }}.{{ image.extension }}">
+                    <img src="{{ image.path }}.{{ image.extension }}" width="189" height="255" alt="lorem"
+                         class="img-rounded">
+                </a>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if saved_comic.characters %}
+        <h2>Персонажи в выпуске</h2>
+        <ul class="list-group">
+            {% for character in saved_comic.characters %}
+                <li class="list-group-item">{{ character.name }}
+                    {% if character.role %}
+                        ({{ character.role }})
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if saved_comic.stories %}
+        <h2>Истории в выпуске</h2>
+        <ul class="list-group">
+            {% for story in saved_comic.stories %}
+                <li class="list-group-item">{{ story.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="_method" value="delete">
+        <input type="submit" class="btn btn-danger" value="Удалить">
+    </form>
+{% endblock %}

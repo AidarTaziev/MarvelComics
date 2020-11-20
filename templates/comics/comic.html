@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ comic.title }}
+{% endblock %}
+
+{% block content %}
+    {% if error_message %}
+        <h1>{{ error_message }}</h1>
+    {% else %}
+        {% if save_error_message %}
+            {{ save_error_message }}
+        {% endif %}
+
+        {% if not is_saved_comic %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success" value="Сохранить комикс">
+            </form>
+        {% else %}
+            <input type="submit" class="btn btn-success" value="Комикс сохранен" disabled>
+        {% endif %}
+
+        <h1>{{ comic.title }}</h1>
+        <img src="{{ comic.thumbnail }}" class="img-responsive center-block" alt="1"/>
+        <p>Дата выхода {{ comic.dates.0.date }} </p>
+        {% if comic.description %} <p>{{ comic.description }}</p> {% endif %}
+
+        {% if comic.images %}
+            <h2>Картинки в выпуске</h2>
+            <ul>
+                {% for image in comic.images %}
+                    <a href="{{ image }}"><img src="{{ image }}" class="img-rounded" width="189" height="255"
+                                               alt="lorem"></a>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if comic.characters.items %}
+            <h2>Персонажи в выпуске</h2>
+            <ul class="list-group">
+                {% for character in comic.characters.items %}
+                    <li class="list-group-item">
+                        {{ character.name }}
+                        {% if character.role %}
+                            ({{ character.role }})
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if comic.stories.items %}
+            <h2>Истории в выпуске</h2>
+            <ul class="list-group">
+                {% for story in comic.stories.items %}
+                    <li class="list-group-item">
+                        {{ story.name }}
+                        {% if story.type %}
+                            ({{ story.type }})
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}

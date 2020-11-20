@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Сохраненные комиксы
+{% endblock %}
+
+{% block content %}
+    {% if saved_comics %}
+        <h1>Сохраненные комиксы</h1>
+        {% for saved_comic in saved_comics %}
+            <div class="comic-block">
+                <p><a href="/master/comic/{{ saved_comic.id }}">{{ saved_comic.title }}</a></p>
+                <p><a href="{{ saved_comic.images.0.path }}.{{ saved_comic.images.0.extension }}">
+                    <img src="{{ saved_comic.images.0.path }}.{{ saved_comic.images.0.extension }}" width="189"
+                         height="255" alt="lorem"></a></p>
+                {% if saved_comic.description %} <p>{{ saved_comic.description }}</p> {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <h1>Сохранненых комиксов не найдено ...</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load rest_framework %}
+
+{% load static %}
+
+{% block content %}
+    <form class="form-wrapper" method="get">
+        <input id="search" name="search_title" value="{{ search_title }}" placeholder="Напиши название комикса здесь..."
+               type="text">
+        <input value="Поиск" id="submit" type="submit">
+    </form>
+    {% if search_title %}
+        {% if comics %}
+            {% for comic in comics %}
+                <div class="comic-block">
+                    <div class="col-4">
+                        <p><a href="/marvel/comic/{{ comic.id }}">{{ comic.title }}</a></p>
+
+                        {% if comic.thumbnail %}
+                            <p><a href="/marvel/comic/{{ comic.id }}"><img src="{{ comic.thumbnail }}"
+                                                                           width="189"
+                                                                           height="255"
+                                                                           alt="lorem"></a></p>
+                        {% endif %}
+                    </div>
+                    <div class="col-4">
+                        <p>Дата выхода {{ comic.dates.0.date|slice:"0:10" }}
+                            {% if comic.ean %}, EAN {{ comic.ean }}{% endif %}
+                        </p>
+                        {% if comic.variants %}
+                            <h4>Варианты выхода</h4>
+                            <ul class="list-group">
+                                {% for variant in comic.variants %}
+                                    <li class="list-group-item">{{ variant.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>{{ error_message }}</h1>
+        {% endif %}
+    {% endif %}
+{% endblock %}
